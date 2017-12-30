@@ -1,0 +1,8 @@
+1       g g > u b c~ b~ d d~ c c~
+mirror  none
+2       g g > u b c~ b~ d s~ c c~
+mirror  none
+3       g g > u b c~ b~ s d~ c c~
+mirror  none
+4       g g > u b c~ b~ s s~ c c~
+mirror  none

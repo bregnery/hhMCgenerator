@@ -1,0 +1,44 @@
+1       g g > u d u~ d~ u d c~ b~
+mirror  none
+2       g g > u d u~ d~ u s c~ b~
+mirror  none
+3       g g > u d u~ d~ d u~ c b~
+mirror  none
+4       g g > u d u~ d~ s u~ c b~
+mirror  none
+5       g g > u d u~ d~ u~ d~ c b
+mirror  none
+6       g g > u d u~ d~ u~ s~ c b
+mirror  none
+7       g g > u d u~ s~ u d c~ b~
+mirror  none
+8       g g > u d u~ s~ u s c~ b~
+mirror  none
+9       g g > u d u~ s~ d u~ c b~
+mirror  none
+10      g g > u d u~ s~ s u~ c b~
+mirror  none
+11      g g > u d u~ s~ u~ d~ c b
+mirror  none
+12      g g > u d u~ s~ u~ s~ c b
+mirror  none
+13      g g > u s u~ d~ u s c~ b~
+mirror  none
+14      g g > u s u~ d~ d u~ c b~
+mirror  none
+15      g g > u s u~ d~ s u~ c b~
+mirror  none
+16      g g > u s u~ d~ u~ d~ c b
+mirror  none
+17      g g > u s u~ d~ u~ s~ c b
+mirror  none
+18      g g > u s u~ s~ u s c~ b~
+mirror  none
+19      g g > u s u~ s~ d u~ c b~
+mirror  none
+20      g g > u s u~ s~ s u~ c b~
+mirror  none
+21      g g > u s u~ s~ u~ d~ c b
+mirror  none
+22      g g > u s u~ s~ u~ s~ c b
+mirror  none

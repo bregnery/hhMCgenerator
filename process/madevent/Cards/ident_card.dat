@@ -1,0 +1,75 @@
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+c      written by the UFO converter
+ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+mass 9000002 mdl_LR
+
+mass 9000004 mdl_xi
+
+mass 9000003 mdl_ReFmeio
+
+mass 9000005 mdl_FmeioH
+
+mass 9000001 mdl_ImFmeio
+
+mass 250 mdl_K
+
+sminputs 1 aEWM1
+
+sminputs 2 mdl_Gf
+
+sminputs 3 aS
+
+wolfenstein 1 mdl_lamWS
+
+wolfenstein 2 mdl_AWS
+
+wolfenstein 3 mdl_rhoWS
+
+wolfenstein 4 mdl_etaWS
+
+yukawa 4 mdl_ymc
+
+yukawa 5 mdl_ymb
+
+yukawa 6 mdl_ymt
+
+yukawa 11 mdl_yme
+
+yukawa 13 mdl_ymm
+
+yukawa 15 mdl_ymtau
+
+mass 4 mdl_MC
+
+mass 6 mdl_MT
+
+mass 5 mdl_MB
+
+mass 23 mdl_MZ
+
+mass 25 mdl_MH
+
+mass 35 mdl_MH02
+
+mass 11 mdl_Me
+
+mass 13 mdl_MM
+
+mass 15 mdl_MTA
+
+mass 9000006 mdl_MP
+
+decay 6 mdl_WT
+
+decay 23 mdl_WZ
+
+decay 24 mdl_WW
+
+decay 25 mdl_WH
+
+decay 35 mdl_WH02
+
+decay 15 mdl_WTau
+
+decay 9000006 mdl_WH1

@@ -1,0 +1,20 @@
+1       g g > u d u~ d~ u d u~ d~
+mirror  none
+2       g g > u d u~ d~ u d u~ s~
+mirror  none
+3       g g > u d u~ d~ u s u~ d~
+mirror  none
+4       g g > u d u~ d~ u s u~ s~
+mirror  none
+5       g g > u d u~ s~ u d u~ s~
+mirror  none
+6       g g > u d u~ s~ u s u~ d~
+mirror  none
+7       g g > u d u~ s~ u s u~ s~
+mirror  none
+8       g g > u s u~ d~ u s u~ d~
+mirror  none
+9       g g > u s u~ d~ u s u~ s~
+mirror  none
+10      g g > u s u~ s~ u s u~ s~
+mirror  none

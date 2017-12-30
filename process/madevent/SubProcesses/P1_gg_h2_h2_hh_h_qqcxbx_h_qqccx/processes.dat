@@ -1,0 +1,28 @@
+1       g g > u d c~ b~ d d~ c c~
+mirror  none
+2       g g > u d c~ b~ d s~ c c~
+mirror  none
+3       g g > u d c~ b~ s d~ c c~
+mirror  none
+4       g g > u d c~ b~ s s~ c c~
+mirror  none
+5       g g > u s c~ b~ d d~ c c~
+mirror  none
+6       g g > u s c~ b~ d s~ c c~
+mirror  none
+7       g g > u s c~ b~ s d~ c c~
+mirror  none
+8       g g > u s c~ b~ s s~ c c~
+mirror  none
+9       g g > d u~ c b~ d d~ c c~
+mirror  none
+10      g g > d u~ c b~ d s~ c c~
+mirror  none
+11      g g > d u~ c b~ s d~ c c~
+mirror  none
+12      g g > d u~ c b~ s s~ c c~
+mirror  none
+13      g g > s u~ c b~ s d~ c c~
+mirror  none
+14      g g > s u~ c b~ s s~ c c~
+mirror  none
