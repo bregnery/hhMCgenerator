@@ -22,11 +22,11 @@
 #  cluster, automatically set to true after warm-up and the gridpack *
 #  is ready. The user should not change this.                        *
 #*********************************************************************
-  .false.   = GridRun   !True = Runs in the grid mode
+  .true.  =  GridRun   !True = Runs in the grid mode
 #*********************************************************************
 # Number of events and rnd seed                                      *
 #*********************************************************************
-  2500       = gevents ! Number of unweighted events requested 
+  100 = gevents ! Number of unweighted events requested 
      1       = gseed   ! rnd seed
     -1       = ngran   ! Granularity (minimum # events per channel)
 #*********************************************************************
