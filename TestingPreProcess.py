@@ -192,7 +192,7 @@ def process(events,**kwargs):
                     tree.set('LeadAK8Jet_mass', jetAK8Lead.mass() )
                     tree.set('LeadAK8Jet_softdrop_mass', jetAK8Lead.userFloat("ak8PFJetsCHSSoftDropMass") )
                     tree.set('LeadAK8Jet_phi', jetAK8Lead.phi() )
-                    tree.set('SubLeadJet_pt', jetAK8Sublead.pt() )
+                    tree.set('SubLeadAK8Jet_pt', jetAK8Sublead.pt() )
                     tree.set('SubLeadAK8Jet_eta', jetAK8Sublead.eta() ) 
                     tree.set('SubLeadAK8Jet_mass', jetAK8Sublead.mass() )
                     tree.set('SubLeadAK8Jet_softdrop_mass', jetAK8Sublead.userFloat("ak8PFJetsCHSSoftDropMass") )
