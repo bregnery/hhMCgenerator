@@ -1,5 +1,5 @@
 */crab_projects/*
-*.tar.xz
+*.tar.*
 *.root
 *log
 *.lhe
