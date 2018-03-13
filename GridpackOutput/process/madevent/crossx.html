@@ -1,0 +1,103 @@
+
+<HTML> 
+<HEAD> 
+    <META HTTP-EQUIV="Refresh" CONTENT="10"> 
+    <META HTTP-EQUIV="EXPIRES" CONTENT="20" > 
+    <TITLE>Online Event Generation</TITLE>
+    <link rel=stylesheet href="./HTML/mgstyle.css" type="text/css">
+</HEAD>
+<BODY>
+<script type="text/javascript">
+function UrlExists(url) {
+  var http = new XMLHttpRequest();
+  http.open('HEAD', url, false);
+  try{
+     http.send()
+     }
+  catch(err){
+   return 1==2;
+  }
+  return http.status!=404;
+}
+function check_link(url,alt, id){
+    var obj = document.getElementById(id);
+    if ( ! UrlExists(url)){
+       if ( ! UrlExists(alt)){
+         obj.href = url;
+         return 1==1;
+        }
+       obj.href = alt;
+       return 1 == 2;
+    }
+    obj.href = url;
+    return 1==1;
+}
+</script>    
+    <H2 align=center> Results in the heft_radion for p p > h2, ( h2 > H H , H > w+ w- > jet jet jet jet / g a , ... </H2> 
+    <HR>
+    
+<H2 ALIGN=CENTER> Currently Running </H2>
+<TABLE BORDER=2 ALIGN=CENTER>
+    <TR ALIGN=CENTER>
+        <TH nowrap ROWSPAN=2 font color="#0000FF"> Run Name </TH>
+        <TH nowrap ROWSPAN=2 font color="#0000FF"> Tag Name </TH>
+        <TH nowrap ROWSPAN=2 font color="#0000FF"> Cards </TH>   
+        <TH nowrap ROWSPAN=2 font color="#0000FF"> Results </TH> 
+        <TH nowrap ROWSPAN=1 COLSPAN=3 font color="#0000FF"> Status/Jobs </TH>
+    </TR>
+        <TR> 
+            <TH>   Queued </TH>
+            <TH>  Running </TH>
+            <TH> Done  </TH>
+        </TR>
+    <TR ALIGN=CENTER> 
+        <TD nowrap ROWSPAN=2> GridRun_1236 </TD>
+        <TD nowrap ROWSPAN=2> tag_1 </TD>
+        <TD nowrap ROWSPAN=2> <a href="./Cards/param_card.dat">param_card</a><BR>
+                    <a href="./Cards/run_card.dat">run_card</a><BR>
+                     <a href="./Cards/plot_card.dat">plot_card</a><BR>
+                    
+                    
+                    
+                    
+                    
+        </TD>
+        <TD nowrap ROWSPAN=2> No results yet </TD> 
+        <td ROWSPAN=2 colspan=4>restoring default data</td>
+ </TR>
+ <TR></TR>
+   
+ </TABLE>
+
+    <br>
+    <br>
+    <H2 align="center"> Available Results </H2>
+        <TABLE BORDER=2 align="center">  
+            <TR align="center">
+                <TH>Run</TH> 
+                <TH>Collider</TH> 
+                <TH> Banner </TH>
+                <TH> Cross section (pb) </TH> 
+                <TH> Events  </TH>
+                <TH> Data </TH>  
+                <TH>Output</TH>
+                <TH>Action</TH> 
+            </TR>      
+            
+        <tr>
+        <td rowspan=1>GridRun_1236</td> 
+        <td rowspan=1><center>  p  p <br> 6500.0 x 6500.0  GeV </center></td>
+        
+        <td rowspan=1> <a href="./Events/GridRun_1236/GridRun_1236_tag_1_banner.txt">tag_1</a></td>
+        
+        <td rowspan=1><center><a href="./HTML/GridRun_1236/results.html"> 0 <font face=symbol>&#177;</font> 0</a>  </center></td>
+        <td rowspan=1><center> No events yet<center></td><td>  </td>
+        <td> banner only</td>
+        <td> <INPUT TYPE=SUBMIT VALUE='remove run' onClick="alert('Launch ./bin/madevent in a shell, and run the following command: remove GridRun_1236 banner --tag=tag_1')"><INPUT TYPE=SUBMIT VALUE='re-run from the banner' onClick="alert('Launch ./bin/madevent in a shell, and run the following command: banner_run GridRun_1236 ')"></td>
+        </tr>
+        </tr>
+        
+        </TABLE>
+    <H3 align=center><A HREF="./index.html"> Main Page </A></H3>
+</BODY> 
+</HTML> 
