@@ -19,5 +19,5 @@ config.Data.outLFNDirBase = '/store/user/bregnery/'
 config.Data.publication = True
 config.Data.outputDatasetTag = 'Radion_hh_wwww_jets_M2000_GEN-SIM-100k'
 
-config.Site.blacklist = 'T3_US_UMiss'
+config.Site.blacklist = ['T3_US_UMiss', 'T2_CH_CSCS_HPC', 'T3_FR_IPNL']
 config.Site.storageSite = 'T3_US_FNALLPC'

@@ -221,3 +221,25 @@ Now use the configuration file to produce MiniAOD.
     cmsRun B2G-RunIISummer16MiniAODv2_Radion_hh_wwww_M3500-MiniAOD_1_cfg.py
 
 If the whole process was successful, the output should be Radion_hh_wwww_M3500_MiniAOD.root
+
+Pre-processing Instructions
+===========================
+
+TestingPreProcess.py is a framework lite program that makes a flat root tree
+from the MiniAOD information. This program is intended only for validation of 
+Monte Carlo simulation and not for doing a full analysis.
+
+This was made to run with CMSSW_8_0_21
+
+    cmsrel CMSSW_8_0_21
+    cd CMSSW_8_0_21/src/
+    git clone https://github.com/bregnery/hhMCgenerator.git
+    scram b
+    cmsenv
+    cd hhMCgenerator
+
+To run the preprocessing
+
+    cd PreProcess/
+    python TestingPreProcess.py
+

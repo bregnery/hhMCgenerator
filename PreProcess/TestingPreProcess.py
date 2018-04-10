@@ -1,6 +1,7 @@
 import sys
 import os
 import math
+import glob
 import ROOT as root
 from array import array
 root.gROOT.SetBatch(True)
@@ -207,9 +208,11 @@ def process(events,**kwargs):
 #redirector = 'root://cms-xrd-global.cern.ch'
 #redirector = 'root://cmsxrootd.fnal.gov'
 
-files = [
-    'Radion_hh_wwww_M3500_MiniAOD.root',
-]
+files = glob.glob("/afs/cern.ch/work/b/bregnery/public/HHwwwwMCgenerator/CMSSW_8_0_21/src/hhMCgenerator/RootFiles/M3500/*.root") 
+
+#[
+#    '../RootFiles/M3500/Radion_hh_wwww_M3500_MiniAOD_1.root',
+#]
 
 outFile = root.TFile("Radion_HH_wwww_FWLite.root",'RECREATE')
 outFile.cd()
@@ -238,7 +241,7 @@ tree.add('nPrimaryVertices', 'F')
 
    
 events = Events(files)
-process(events,maxEvents=100,tree=tree)
+process(events,maxEvents=100000,tree=tree)
     
 outFile.Write()
 outFile.Close() 
