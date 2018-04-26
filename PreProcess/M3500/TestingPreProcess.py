@@ -123,6 +123,10 @@ def process(events,**kwargs):
     collections.add("jetsAK8", "std::vector<pat::Jet>", "slimmedJetsAK8")
     collections.add("primaryVertices", "std::vector<reco::Vertex>", "offlineSlimmedPrimaryVertices")
 
+    #==================================
+    # Event Loop //////////////////////
+    #==================================
+
     numEvents = events.size()
     if maxEvents>=0: numEvents = min(numEvents,maxEvents)
     for i,event in enumerate(events):
@@ -150,28 +154,84 @@ def process(events,**kwargs):
         tree.set('nPrimaryVertices', len(vertices) )
 
         #================================
+        # genParticles //////////////////
+        #================================
+        genParticles = collections.get('genParticles', event)
+
+        genHiggs1 = None
+        genHiggs2 = None
+        nGenHiggs = 0
+
+        for ipart, genPart in enumerate(genParticles):
+            if genHiggs1 == None and genPart.pdgId() == 25 and 40 > genPart.status() > 20:
+                genHiggs1 = genPart
+            elif genHiggs1 != None and genHiggs2 == None and genHiggs1 != genPart and genPart.pdgId() == 25 and 40 > genPart.status() > 20:
+                genHiggs2 = genPart
+            if genPart.pdgId() == 25 and 40 > genPart.status() > 20:
+                nGenHiggs = nGenHiggs + 1\
+
+        tree.set('nGenHiggs', nGenHiggs)
+        if genHiggs1 != None:
+            tree.set('GenHiggs1_pt', genHiggs1.pt() )
+            tree.set('GenHiggs1_eta', genHiggs1.eta() )
+            tree.set('GenHiggs1_phi', genHiggs1.phi() )
+        if genHiggs1 == None:
+            tree.set('GenHiggs1_pt', 0 )
+            tree.set('GenHiggs1_eta', 0 )
+            tree.set('GenHiggs1_phi', 0 )
+        if genHiggs2 != None:
+            tree.set('GenHiggs2_pt', genHiggs2.pt() )
+            tree.set('GenHiggs2_eta', genHiggs2.eta() )
+            tree.set('GenHiggs2_phi', genHiggs2.phi() )
+        if genHiggs2 == None:
+            tree.set('GenHiggs2_pt', 0 )
+            tree.set('GenHiggs2_eta', 0 )
+            tree.set('GenHiggs2_phi', 0 )
+
+        #================================
         # Jets //////////////////////////
         #================================
         jets = collections.get('jets', event)
 
+        tree.set('nJets', len(jets) )
+
+        jetLead = None
+        jetSublead = None
+
         if len(jets) > 0:
-            jetLead = jets[0]
-            jetSublead = jets[0]
             for ijet,jet in enumerate(jets):
-    
                 if len(jets) > 1:
                     for jjet,jet in enumerate(jets):
-                        if jets[jjet].pt() > jets[ijet].pt(): jetLead = jets[jjet]
-                        if jetLead.pt() > jets[jjet].pt() >= jets[ijet].pt(): jetSublead = jets[jjet]
-                    tree.set('LeadJet_pt', jetLead.pt() )
-                    tree.set('LeadJet_eta', jetLead.eta() ) 
-                    tree.set('LeadJet_mass', jetLead.mass() )
-                    tree.set('LeadJet_phi', jetLead.phi() )
-                    tree.set('SubLeadJet_pt', jetSublead.pt() )
-                    tree.set('SubLeadJet_eta', jetSublead.eta() ) 
-                    tree.set('SubLeadJet_mass', jetSublead.mass() )
-                    tree.set('SubLeadJet_phi', jetSublead.phi() )
-    
+                        if jetLead == None: jetLead = jets[jjet]
+                        if jetLead != None and jets[jjet].pt() > jets[ijet].pt(): jetLead = jets[jjet]
+                        if jetLead != None and jetSublead == None and jetLead.pt() > jets[jjet].pt() >= jets[ijet].pt(): 
+                            jetSublead = jets[jjet]
+                        if jetLead != None and jetSublead != None and jetLead.pt() > jets[jjet].pt() >= jets[ijet].pt(): 
+                            jetSublead = jets[jjet]
+                elif len(jets) == 1:
+                    jetLead = jets[ijet]
+
+        if jetLead != None:
+            tree.set('LeadJet_pt', jetLead.pt() )
+            tree.set('LeadJet_eta', jetLead.eta() ) 
+            tree.set('LeadJet_mass', jetLead.mass() )
+            tree.set('LeadJet_phi', jetLead.phi() )
+        elif jetLead == None:
+            tree.set('LeadJet_pt', 0 )
+            tree.set('LeadJet_eta', 0 ) 
+            tree.set('LeadJet_mass', 0 )
+            tree.set('LeadJet_phi', 0 )
+        if jetSublead != None: 
+            tree.set('SubLeadJet_pt', jetSublead.pt() )
+            tree.set('SubLeadJet_eta', jetSublead.eta() ) 
+            tree.set('SubLeadJet_mass', jetSublead.mass() )
+            tree.set('SubLeadJet_phi', jetSublead.phi() )
+        elif jetSublead == None: 
+            tree.set('SubLeadJet_pt', 0 )
+            tree.set('SubLeadJet_eta', 0 ) 
+            tree.set('SubLeadJet_mass', 0 )
+            tree.set('SubLeadJet_phi', 0 )
+        
 	#=================================
         # JetsAK8 ////////////////////////
         #=================================
@@ -179,26 +239,47 @@ def process(events,**kwargs):
 
         tree.set('nJetsAK8', len(jetsAK8) )
 
+        jetAK8Lead = None
+        jetAK8Sublead = None
+
         if len(jetsAK8) > 0:
-            jetAK8Lead = jetsAK8[0]
-            jetAK8Sublead = jetsAK8[0]
             for ijet,jet in enumerate(jetsAK8):
-             
                 if len(jetsAK8) > 1:
                     for jjet,jet in enumerate(jetsAK8):
-                        if jetsAK8[jjet].pt() > jetsAK8[ijet].pt(): jetAK8Lead = jetsAK8[jjet]
-                        if jetAK8Lead.pt() > jetsAK8[jjet].pt() >= jetsAK8[ijet].pt(): jetAK8Sublead = jetsAK8[jjet]
-                    tree.set('LeadAK8Jet_pt', jetAK8Lead.pt() )
-                    tree.set('LeadAK8Jet_eta', jetAK8Lead.eta() ) 
-                    tree.set('LeadAK8Jet_mass', jetAK8Lead.mass() )
-                    tree.set('LeadAK8Jet_softdrop_mass', jetAK8Lead.userFloat("ak8PFJetsCHSSoftDropMass") )
-                    tree.set('LeadAK8Jet_phi', jetAK8Lead.phi() )
-                    tree.set('SubLeadAK8Jet_pt', jetAK8Sublead.pt() )
-                    tree.set('SubLeadAK8Jet_eta', jetAK8Sublead.eta() ) 
-                    tree.set('SubLeadAK8Jet_mass', jetAK8Sublead.mass() )
-                    tree.set('SubLeadAK8Jet_softdrop_mass', jetAK8Sublead.userFloat("ak8PFJetsCHSSoftDropMass") )
-                    tree.set('SubLeadAK8Jet_phi', jetAK8Sublead.phi() )
-    
+                        if jetAK8Lead == None: jetAK8Lead = jetsAK8[jjet]
+                        if jetAK8Lead != None and jetsAK8[jjet].pt() > jetsAK8[ijet].pt(): jetAK8Lead = jetsAK8[jjet]
+                        if jetAK8Lead != None and jetAK8Sublead == None and jetAK8Lead.pt() > jetsAK8[jjet].pt() >= jetsAK8[ijet].pt(): 
+                            jetAK8Sublead = jetsAK8[jjet]
+                        if jetAK8Lead != None and jetAK8Sublead != None and jetAK8Lead.pt() > jetsAK8[jjet].pt() >= jetsAK8[ijet].pt(): 
+                            jetAK8Sublead = jetsAK8[jjet]
+                elif len(jetsAK8) == 1:
+                    jetAK8Lead = jetsAK8[ijet]
+
+        if jetAK8Lead != None:
+            tree.set('LeadAK8Jet_pt', jetAK8Lead.pt() )
+            tree.set('LeadAK8Jet_eta', jetAK8Lead.eta() ) 
+            tree.set('LeadAK8Jet_mass', jetAK8Lead.mass() )
+            tree.set('LeadAK8Jet_phi', jetAK8Lead.phi() )
+            tree.set('LeadAK8Jet_softdrop_mass', jetAK8Lead.userFloat("ak8PFJetsCHSSoftDropMass") )
+        elif jetAK8Lead == None:
+            tree.set('LeadAK8Jet_pt', 0 )
+            tree.set('LeadAK8Jet_eta', 0 ) 
+            tree.set('LeadAK8Jet_mass', 0 )
+            tree.set('LeadAK8Jet_phi', 0 )
+            tree.set('LeadAK8Jet_softdrop_mass', 0 )
+        if jetAK8Sublead != None: 
+            tree.set('SubLeadAK8Jet_pt', jetAK8Sublead.pt() )
+            tree.set('SubLeadAK8Jet_eta', jetAK8Sublead.eta() ) 
+            tree.set('SubLeadAK8Jet_mass', jetAK8Sublead.mass() )
+            tree.set('SubLeadAK8Jet_phi', jetAK8Sublead.phi() )
+            tree.set('SubLeadAK8Jet_softdrop_mass', jetAK8Sublead.userFloat("ak8PFJetsCHSSoftDropMass") )
+        elif jetAK8Sublead == None: 
+            tree.set('SubLeadAK8Jet_pt', 0 )
+            tree.set('SubLeadAK8Jet_eta', 0 ) 
+            tree.set('SubLeadAK8Jet_mass', 0 )
+            tree.set('SubLeadAK8Jet_phi', 0 )
+            tree.set('SubLeadAK8Jet_softdrop_mass', 0 )
+      
         #==================================
         # Fill Tree ///////////////////////
         #==================================
@@ -217,7 +298,20 @@ files = glob.glob("/afs/cern.ch/work/b/bregnery/public/HHwwwwMCgenerator/CMSSW_8
 outFile = root.TFile("Radion_HH_wwww_FWLite.root",'RECREATE')
 outFile.cd()
 
+#==================================
+# Add the Tree Branches ///////////
+#==================================
+
 tree = AnalysisTree()
+
+tree.add('nGenHiggs', 'F')
+tree.add('GenHiggs1_pt', 'F')
+tree.add('GenHiggs1_phi', 'F')
+tree.add('GenHiggs1_eta', 'F')
+tree.add('GenHiggs2_pt', 'F')
+tree.add('GenHiggs2_phi', 'F')
+tree.add('GenHiggs2_eta', 'F')
+
 tree.add('LeadJet_pt', 'F')
 tree.add('LeadJet_eta', 'F')
 tree.add('LeadJet_mass', 'F')
@@ -226,6 +320,8 @@ tree.add('SubLeadJet_pt', 'F')
 tree.add('SubLeadJet_eta', 'F')
 tree.add('SubLeadJet_phi', 'F')
 tree.add('SubLeadJet_mass', 'F')
+tree.add('nJets', 'F')
+
 tree.add('LeadAK8Jet_pt', 'F')
 tree.add('LeadAK8Jet_eta', 'F')
 tree.add('LeadAK8Jet_mass', 'F')

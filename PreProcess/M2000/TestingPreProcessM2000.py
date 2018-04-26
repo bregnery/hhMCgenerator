@@ -208,13 +208,13 @@ def process(events,**kwargs):
 #redirector = 'root://cms-xrd-global.cern.ch'
 #redirector = 'root://cmsxrootd.fnal.gov'
 
-files = glob.glob("/afs/cern.ch/work/b/bregnery/public/HHwwwwMCgenerator/CMSSW_8_0_21/src/hhMCgenerator/RootFiles/M3500/*.root") 
+files = glob.glob("/afs/cern.ch/work/b/bregnery/public/HHwwwwMCgenerator/CMSSW_8_0_21/src/hhMCgenerator/RootFiles/M2000/*.root") 
 
 #[
 #    '../RootFiles/M3500/Radion_hh_wwww_M3500_MiniAOD_1.root',
 #]
 
-outFile = root.TFile("Radion_HH_wwww_FWLite.root",'RECREATE')
+outFile = root.TFile("Radion_HH_wwww_M2000_FWLite.root",'RECREATE')
 outFile.cd()
 
 tree = AnalysisTree()
