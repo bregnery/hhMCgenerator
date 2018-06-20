@@ -154,13 +154,18 @@ def process(events,**kwargs):
         tree.set('nPrimaryVertices', len(vertices) )
 
         #================================
-        # genParticles //////////////////
+        # genHiggs //////////////////////
         #================================
         genParticles = collections.get('genParticles', event)
 
         genHiggs1 = None
         genHiggs2 = None
+        virtualW1 = None
+        virtualW2 = None
         nGenHiggs = 0
+        nVirGenWs = 0
+
+        #print("Event number ", i)
 
         for ipart, genPart in enumerate(genParticles):
             if genHiggs1 == None and genPart.pdgId() == 25 and 40 > genPart.status() > 20:
@@ -170,11 +175,29 @@ def process(events,**kwargs):
             if genPart.pdgId() == 25 and 40 > genPart.status() > 20:
                 nGenHiggs = nGenHiggs + 1\
 
+            #print("PDG ID: ", genPart.pdgId() )
+            #print("PDG Status: ", genPart.status() )
+
         tree.set('nGenHiggs', nGenHiggs)
         if genHiggs1 != None:
             tree.set('GenHiggs1_pt', genHiggs1.pt() )
             tree.set('GenHiggs1_eta', genHiggs1.eta() )
             tree.set('GenHiggs1_phi', genHiggs1.phi() )
+            
+            # Get virutal W bosons
+            if genHiggs1.numberOfDaughters() == 3:
+                nVirGenWs = nVirGenWs + 1
+                if abs(genHiggs1.daughter(0).pdgId() ) == 24:
+                    daughter1 = root.TLorentzVector(genHiggs1.daughter(1).px(), genHiggs1.daughter(1).py(), genHiggs1.daughter(1).pz(), genHiggs1.daughter(1).energy() )
+                    daughter2 = root.TLorentzVector(genHiggs1.daughter(2).px(), genHiggs1.daughter(2).py(), genHiggs1.daughter(2).pz(), genHiggs1.daughter(2).energy() )
+                    virtualW1 = daughter1 + daughter2
+                if abs(genHiggs1.daughter(2).pdgId() ) == 24:
+                    daughter1 = root.TLorentzVector(genHiggs1.daughter(0).px(), genHiggs1.daughter(0).py(), genHiggs1.daughter(0).pz(), genHiggs1.daughter(0).energy() )
+                    daughter2 = root.TLorentzVector(genHiggs1.daughter(1).px(), genHiggs1.daughter(1).py(), genHiggs1.daughter(1).pz(), genHiggs1.daughter(1).energy() )
+                    virtualW1 = daughter1 + daughter2
+            if genHiggs1.numberOfDaughters() == 4:
+                    print("Two offshell W bosons!!!") 
+
         if genHiggs1 == None:
             tree.set('GenHiggs1_pt', 0 )
             tree.set('GenHiggs1_eta', 0 )
@@ -183,10 +206,115 @@ def process(events,**kwargs):
             tree.set('GenHiggs2_pt', genHiggs2.pt() )
             tree.set('GenHiggs2_eta', genHiggs2.eta() )
             tree.set('GenHiggs2_phi', genHiggs2.phi() )
+
+            # Get virtual W bosons
+            if genHiggs2.numberOfDaughters() == 3:
+                nVirGenWs = nVirGenWs + 1
+                if abs(genHiggs2.daughter(0).pdgId() ) == 24:
+                    daughter1 = root.TLorentzVector(genHiggs2.daughter(1).px(), genHiggs2.daughter(1).py(), genHiggs2.daughter(1).pz(), genHiggs2.daughter(1).energy() )
+                    daughter2 = root.TLorentzVector(genHiggs2.daughter(2).px(), genHiggs2.daughter(2).py(), genHiggs2.daughter(2).pz(), genHiggs2.daughter(2).energy() )
+                    virtualW2 = daughter1 + daughter2
+                if abs(genHiggs2.daughter(2).pdgId() ) == 24:
+                    daughter1 = root.TLorentzVector(genHiggs2.daughter(0).px(), genHiggs2.daughter(0).py(), genHiggs2.daughter(0).pz(), genHiggs2.daughter(0).energy() )
+                    daughter2 = root.TLorentzVector(genHiggs2.daughter(1).px(), genHiggs2.daughter(1).py(), genHiggs2.daughter(1).pz(), genHiggs2.daughter(1).energy() )
+                    virtualW2 = daughter1 + daughter2
+            if genHiggs2.numberOfDaughters() == 4:
+                    print("Two offshell W bosons!!!") 
+
         if genHiggs2 == None:
             tree.set('GenHiggs2_pt', 0 )
             tree.set('GenHiggs2_eta', 0 )
             tree.set('GenHiggs2_phi', 0 )
+
+        tree.set('nVirGenWs', nVirGenWs)
+        if virtualW1 != None:
+            tree.set('virGenW1_pt', virtualW1.Pt() )
+            tree.set('virGenW1_phi', virtualW1.Phi() )
+            tree.set('virGenW1_eta', virtualW1.Eta() )
+            tree.set('virGenW1_mass', virtualW1.M() )
+
+        if virtualW1 == None:
+            tree.set('virGenW1_pt', 0 )
+            tree.set('virGenW1_phi', 0 )
+            tree.set('virGenW1_eta', 0 )
+            tree.set('virGenW1_mass', 0 )
+
+        if virtualW2 != None:
+            tree.set('virGenW2_pt', virtualW2.Pt() )
+            tree.set('virGenW2_phi', virtualW2.Phi() )
+            tree.set('virGenW2_eta', virtualW2.Eta() )
+            tree.set('virGenW2_mass', virtualW2.M() )
+
+        if virtualW2 == None:
+            tree.set('virGenW2_pt', 0 )
+            tree.set('virGenW2_phi', 0 )
+            tree.set('virGenW2_eta', 0 )
+            tree.set('virGenW2_mass', 0 )
+
+        #================================
+        # genWboson /////////////////////
+        #================================
+        genW1 = None
+        genW2 = None
+        genW3 = None
+        genW4 = None
+        nGenWs = 0
+
+        
+        for ipart, genPart in enumerate(genParticles):
+            if genW1 == None and abs(genPart.pdgId() ) == 24 and 50 > genPart.status() > 20:
+                genW1 = genPart
+            elif genW1 != None and genW2 == None and genW1 != genPart and abs(genPart.pdgId() ) == 24 and 50 > genPart.status() > 20:
+                genW2 = genPart
+            elif genW1 != None and genW2 != None and genW3 == None and genW1 != genPart and genW2 != genPart and abs(genPart.pdgId() ) == 24 and 50 > genPart.status() > 20:
+                genW3 = genPart
+            elif genW1 != None and genW2 != None and genW3 != None and genW4 == None and genW1 != genPart and genW2 != genPart and genW3 != genPart and abs(genPart.pdgId() ) == 24 and 50 > genPart.status() > 20:
+                genW4 = genPart
+            if abs(genPart.pdgId() ) == 24 and 50 > genPart.status() > 20:
+                nGenWs = nGenWs + 1\
+
+        nGenWs = nGenWs + nVirGenWs
+        tree.set('nGenWs', nGenWs)
+        if genW1 != None:
+            tree.set('GenW1_pt', genW1.pt() )
+            tree.set('GenW1_eta', genW1.eta() )
+            tree.set('GenW1_phi', genW1.phi() )
+            tree.set('GenW1_mass', genW1.mass() )
+        if genW1 == None:
+            tree.set('GenW1_pt', 0 )
+            tree.set('GenW1_eta', 0 )
+            tree.set('GenW1_phi', 0 )
+            tree.set('GenW1_mass', 0 )
+        if genW2 != None:
+            tree.set('GenW2_pt', genW2.pt() )
+            tree.set('GenW2_eta', genW2.eta() )
+            tree.set('GenW2_phi', genW2.phi() )
+            tree.set('GenW2_mass', genW2.mass() )
+        if genW2 == None:
+            tree.set('GenW2_pt', 0 )
+            tree.set('GenW2_eta', 0 )
+            tree.set('GenW2_phi', 0 )
+            tree.set('GenW2_mass', 0 )
+        if genW3 != None:
+            tree.set('GenW3_pt', genW3.pt() )
+            tree.set('GenW3_eta', genW3.eta() )
+            tree.set('GenW3_phi', genW3.phi() )
+            tree.set('GenW3_mass', genW3.mass() )
+        if genW3 == None:
+            tree.set('GenW3_pt', 0 )
+            tree.set('GenW3_eta', 0 )
+            tree.set('GenW3_phi', 0 )
+            tree.set('GenW3_mass', 0 )
+        if genW4 != None:
+            tree.set('GenW4_pt', genW4.pt() )
+            tree.set('GenW4_eta', genW4.eta() )
+            tree.set('GenW4_phi', genW4.phi() )
+            tree.set('GenW4_mass', genW4.mass() )
+        if genW4 == None:
+            tree.set('GenW4_pt', 0 )
+            tree.set('GenW4_eta', 0 )
+            tree.set('GenW4_phi', 0 )
+            tree.set('GenW4_mass', 0 )
 
         #================================
         # Jets //////////////////////////
@@ -311,6 +439,34 @@ tree.add('GenHiggs1_eta', 'F')
 tree.add('GenHiggs2_pt', 'F')
 tree.add('GenHiggs2_phi', 'F')
 tree.add('GenHiggs2_eta', 'F')
+
+tree.add('nVirGenWs', 'F')
+tree.add('virGenW1_pt','F')
+tree.add('virGenW1_phi','F')
+tree.add('virGenW1_eta','F')
+tree.add('virGenW1_mass','F')
+tree.add('virGenW2_pt','F')
+tree.add('virGenW2_phi','F')
+tree.add('virGenW2_eta','F')
+tree.add('virGenW2_mass','F')
+
+tree.add('nGenWs', 'F')
+tree.add('GenW1_pt', 'F')
+tree.add('GenW1_phi', 'F')
+tree.add('GenW1_eta', 'F')
+tree.add('GenW1_mass', 'F')
+tree.add('GenW2_pt', 'F')
+tree.add('GenW2_phi', 'F')
+tree.add('GenW2_eta', 'F')
+tree.add('GenW2_mass', 'F')
+tree.add('GenW3_pt', 'F')
+tree.add('GenW3_phi', 'F')
+tree.add('GenW3_eta', 'F')
+tree.add('GenW3_mass', 'F')
+tree.add('GenW4_pt', 'F')
+tree.add('GenW4_phi', 'F')
+tree.add('GenW4_eta', 'F')
+tree.add('GenW4_mass', 'F')
 
 tree.add('LeadJet_pt', 'F')
 tree.add('LeadJet_eta', 'F')
