@@ -106,6 +106,50 @@ class AnalysisTree(object):
         for var in self.results:
             self.results[var][0] = 0
 
+def sortJets(jets):
+
+    jetLead = None
+    jetSublead = None
+    jet3 = None
+    jet4 = None
+
+    # Get Leading Jet
+    if len(jets) > 0:
+        for ijet,jet in enumerate(jets):
+            if jetLead == None: jetLead = jets[ijet]
+            if jetLead != None and jets[ijet].pt() > jetLead.pt(): jetLead == jets[ijet]
+        #print "Lead Jet pT: ", jetLead.pt()
+
+    # Get Subleading Jet
+    if len(jets) > 1:
+        for jjet,jet in enumerate(jets):
+            if jetSublead == None and jetLead.pt() > jets[jjet].pt(): 
+                jetSublead = jets[jjet]
+            if jetSublead != None and jetLead.pt() > jets[jjet].pt() > jetSublead.pt(): 
+                jetSublead = jets[jjet]
+        #print "Sublead Jet pT: ", jetSublead.pt()
+    
+    #Get Jet 3
+    if len(jets) > 2:
+        for kjet,jet in enumerate(jets):
+            if jet3 == None and jetSublead.pt() > jets[kjet].pt(): 
+                jet3 = jets[kjet]
+            if jet3 != None and jetSublead.pt() > jets[kjet].pt() > jet3.pt():
+                jet3 = jets[kjet]
+        #print "Jet 3 pT: ", jet3.pt()
+
+    #Get Jet 4
+    if len(jets) > 3:
+        for ljet,jet in enumerate(jets):
+            if jet4 == None and jet3.pt() > jets[ljet].pt(): 
+                jet4 = jets[ljet]
+            if jet4 != None and jet3.pt() > jets[ljet].pt() > jet4.pt():
+                jet4 = jets[ljet]
+        #print "Jet 4 pT: ", jet4.pt()
+
+    return jetLead, jetSublead, jet3, jet4
+
+
 def process(events,**kwargs):
     maxEvents = kwargs.pop('maxEvents',-1)
     reportEvery = kwargs.pop('reportEvery',1000)
@@ -218,8 +262,8 @@ def process(events,**kwargs):
                     daughter1 = root.TLorentzVector(genHiggs2.daughter(0).px(), genHiggs2.daughter(0).py(), genHiggs2.daughter(0).pz(), genHiggs2.daughter(0).energy() )
                     daughter2 = root.TLorentzVector(genHiggs2.daughter(1).px(), genHiggs2.daughter(1).py(), genHiggs2.daughter(1).pz(), genHiggs2.daughter(1).energy() )
                     virtualW2 = daughter1 + daughter2
-            if genHiggs2.numberOfDaughters() == 4:
-                    print("Two offshell W bosons!!!") 
+        #    if genHiggs2.numberOfDaughters() == 4:
+        #            print("Two offshell W bosons!!!") 
 
         if genHiggs2 == None:
             tree.set('GenHiggs2_pt', 0 )
@@ -323,21 +367,7 @@ def process(events,**kwargs):
 
         tree.set('nJets', len(jets) )
 
-        jetLead = None
-        jetSublead = None
-
-        if len(jets) > 0:
-            for ijet,jet in enumerate(jets):
-                if len(jets) > 1:
-                    for jjet,jet in enumerate(jets):
-                        if jetLead == None: jetLead = jets[jjet]
-                        if jetLead != None and jets[jjet].pt() > jets[ijet].pt(): jetLead = jets[jjet]
-                        if jetLead != None and jetSublead == None and jetLead.pt() > jets[jjet].pt() >= jets[ijet].pt(): 
-                            jetSublead = jets[jjet]
-                        if jetLead != None and jetSublead != None and jetLead.pt() > jets[jjet].pt() >= jets[ijet].pt(): 
-                            jetSublead = jets[jjet]
-                elif len(jets) == 1:
-                    jetLead = jets[ijet]
+        jetLead, jetSublead, jet3, jet4 = sortJets(jets)
 
         if jetLead != None:
             tree.set('LeadJet_pt', jetLead.pt() )
@@ -359,6 +389,26 @@ def process(events,**kwargs):
             tree.set('SubLeadJet_eta', 0 ) 
             tree.set('SubLeadJet_mass', 0 )
             tree.set('SubLeadJet_phi', 0 )
+        if jet3 != None:
+            tree.set('Jet3_pt', jet3.pt() )
+            tree.set('Jet3_eta', jet3.eta() ) 
+            tree.set('Jet3_mass', jet3.mass() )
+            tree.set('Jet3_phi', jet3.phi() )
+        elif jet3 == None:
+            tree.set('Jet3_pt', 0 )
+            tree.set('Jet3_eta', 0 ) 
+            tree.set('Jet3_mass', 0 )
+            tree.set('Jet3_phi', 0 )
+        if jet4 != None:
+            tree.set('Jet4_pt', jet4.pt() )
+            tree.set('Jet4_eta', jet4.eta() ) 
+            tree.set('Jet4_mass', jet4.mass() )
+            tree.set('Jet4_phi', jet4.phi() )
+        elif jet4 == None:
+            tree.set('Jet4_pt', 0 )
+            tree.set('Jet4_eta', 0 ) 
+            tree.set('Jet4_mass', 0 )
+            tree.set('Jet4_phi', 0 )
         
 	#=================================
         # JetsAK8 ////////////////////////
@@ -367,21 +417,7 @@ def process(events,**kwargs):
 
         tree.set('nJetsAK8', len(jetsAK8) )
 
-        jetAK8Lead = None
-        jetAK8Sublead = None
-
-        if len(jetsAK8) > 0:
-            for ijet,jet in enumerate(jetsAK8):
-                if len(jetsAK8) > 1:
-                    for jjet,jet in enumerate(jetsAK8):
-                        if jetAK8Lead == None: jetAK8Lead = jetsAK8[jjet]
-                        if jetAK8Lead != None and jetsAK8[jjet].pt() > jetsAK8[ijet].pt(): jetAK8Lead = jetsAK8[jjet]
-                        if jetAK8Lead != None and jetAK8Sublead == None and jetAK8Lead.pt() > jetsAK8[jjet].pt() >= jetsAK8[ijet].pt(): 
-                            jetAK8Sublead = jetsAK8[jjet]
-                        if jetAK8Lead != None and jetAK8Sublead != None and jetAK8Lead.pt() > jetsAK8[jjet].pt() >= jetsAK8[ijet].pt(): 
-                            jetAK8Sublead = jetsAK8[jjet]
-                elif len(jetsAK8) == 1:
-                    jetAK8Lead = jetsAK8[ijet]
+        jetAK8Lead, jetAK8Sublead, jet3AK8, jet4AK8 = sortJets(jetsAK8)
 
         if jetAK8Lead != None:
             tree.set('LeadAK8Jet_pt', jetAK8Lead.pt() )
@@ -407,6 +443,30 @@ def process(events,**kwargs):
             tree.set('SubLeadAK8Jet_mass', 0 )
             tree.set('SubLeadAK8Jet_phi', 0 )
             tree.set('SubLeadAK8Jet_softdrop_mass', 0 )
+        if jet3AK8 != None:
+            tree.set('Jet3AK8_pt', jet3.pt() )
+            tree.set('Jet3AK8_eta', jet3.eta() ) 
+            tree.set('Jet3AK8_mass', jet3.mass() )
+            tree.set('Jet3AK8_phi', jet3.phi() )
+            tree.set('Jet3AK8_softdrop_mass', jet3AK8.userFloat("ak8PFJetsCHSSoftDropMass") )
+        elif jet3AK8 == None:
+            tree.set('Jet3AK8_pt', 0 )
+            tree.set('Jet3AK8_eta', 0 ) 
+            tree.set('Jet3AK8_mass', 0 )
+            tree.set('Jet3AK8_phi', 0 )
+            tree.set('Jet3AK8_softdrop_mass', 0 )
+        if jet4AK8 != None:
+            tree.set('Jet4AK8_pt', jet4.pt() )
+            tree.set('Jet4AK8_eta', jet4.eta() ) 
+            tree.set('Jet4AK8_mass', jet4.mass() )
+            tree.set('Jet4AK8_phi', jet4.phi() )
+            tree.set('Jet4AK8_softdrop_mass', jet4AK8.userFloat("ak8PFJetsCHSSoftDropMass") )
+        elif jet4AK8 == None:
+            tree.set('Jet4AK8_pt', 0 )
+            tree.set('Jet4AK8_eta', 0 ) 
+            tree.set('Jet4AK8_mass', 0 )
+            tree.set('Jet4AK8_phi', 0 )
+            tree.set('Jet4AK8_softdrop_mass', 0 )
       
         #==================================
         # Fill Tree ///////////////////////
@@ -476,6 +536,14 @@ tree.add('SubLeadJet_pt', 'F')
 tree.add('SubLeadJet_eta', 'F')
 tree.add('SubLeadJet_phi', 'F')
 tree.add('SubLeadJet_mass', 'F')
+tree.add('Jet3_pt', 'F')
+tree.add('Jet3_eta', 'F')
+tree.add('Jet3_mass', 'F')
+tree.add('Jet3_phi', 'F')
+tree.add('Jet4_pt', 'F')
+tree.add('Jet4_eta', 'F')
+tree.add('Jet4_mass', 'F')
+tree.add('Jet4_phi', 'F')
 tree.add('nJets', 'F')
 
 tree.add('LeadAK8Jet_pt', 'F')
@@ -488,6 +556,16 @@ tree.add('SubLeadAK8Jet_eta', 'F')
 tree.add('SubLeadAK8Jet_mass', 'F')
 tree.add('SubLeadAK8Jet_softdrop_mass', 'F')
 tree.add('SubLeadAK8Jet_phi', 'F')
+tree.add('Jet3AK8_pt', 'F')
+tree.add('Jet3AK8_eta', 'F')
+tree.add('Jet3AK8_mass', 'F')
+tree.add('Jet3AK8_softdrop_mass', 'F')
+tree.add('Jet3AK8_phi', 'F')
+tree.add('Jet4AK8_pt', 'F')
+tree.add('Jet4AK8_eta', 'F')
+tree.add('Jet4AK8_mass', 'F')
+tree.add('Jet4AK8_softdrop_mass', 'F')
+tree.add('Jet4AK8_phi', 'F')
 tree.add('nJetsAK8', 'F')
 tree.add('nPrimaryVertices', 'F')
 
